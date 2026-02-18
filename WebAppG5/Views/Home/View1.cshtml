@@ -1,0 +1,44 @@
+﻿<h1>Hello In The first View :)</h1>
+
+<!--C# & html-->
+<!--Razor Engin-->
+<style>
+    /*Switch langual*/
+h1{
+    color:red;
+    background-color:yellow;
+    border:2px solid green;
+}
+</style>
+<script>
+    console.log("hiiiiiii");
+</script>
+
+<!--Razor Syntax-->
+<!--Bloc of Code-->
+@{
+    //valid C# Execute not render
+    int x = 10;
+    int y = x + 10;
+    <p>hiiiiiii</p>
+}
+<!--Inline Statment (one line C# Render View-->
+@x
+<h2>@(x + y)</h2>
+
+<!--Condition statmen-->
+@if (x > y)
+{
+    <h3>x Graeter than y</h3>
+}else
+{
+    <h3>x=@x Less than y=@y</h3>
+
+}
+<!--Iteration for ,while ,foreach-->
+<select>
+@for (int i = 0; i < 10; i++)
+{
+    <option>@i</option>
+}
+</select>
