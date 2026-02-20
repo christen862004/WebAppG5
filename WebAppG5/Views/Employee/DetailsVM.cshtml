@@ -1,0 +1,20 @@
+﻿@model EmpWithColroBranchesTempMsgViewModel
+
+@* @using WebAppG5.ViewModel
+@model EmpWithColroBranchesTempMsgViewModel *@
+
+@* @model WebAppG5.ViewModel.EmpWithColroBranchesTempMsgViewModel *@
+@{
+    ViewData["Title"] = "DetailsVM";
+}
+
+<h1>DetailsVM</h1>
+<h2>@Model.EmpName</h2>
+@Model.Message
+<select>
+    @foreach (var item in Model.Branches)
+    {
+        <option>@item</option>
+    }
+
+</select>

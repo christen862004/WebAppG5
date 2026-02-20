@@ -1,0 +1,21 @@
+﻿<!--List<Student>-->
+@{
+    ViewData["Title"] = "ShowAll";
+}
+
+<h1>ShowAll</h1>
+
+
+<table class="table table-bordered table-hover">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+    </tr>
+    @foreach (dynamic item in Model)
+    {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.Name</td>
+        </tr>
+    }      
+</table>
