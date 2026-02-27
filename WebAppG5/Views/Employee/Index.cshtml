@@ -11,6 +11,8 @@
         <th>ID</th>
         <th>Name</th>
         <th>PRofile Image</th>
+        <th>PRofile Image</th>
+        <th></th>
     </tr>
     @foreach (Employee item in Model)
     {
@@ -20,6 +22,9 @@
             <td>@item.ImageURL</td>
             <td>
                 <img src="/Images/@item.ImageURL" style="width:100px"/>
+            </td>
+            <td>
+                <a href="/Employee/Edit/@item.Id">Edit</a>
             </td>
         </tr>
     }

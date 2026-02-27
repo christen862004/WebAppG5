@@ -18,6 +18,47 @@ namespace WebAppG5.Controllers
             List<Employee> employees = context.Employees.ToList();
             return View("Index",employees);
         }
+
+        #region Edit
+        public IActionResult Edit(int id)
+        {
+           //collect
+            Employee empFromdb=context.Employees.FirstOrDefault(e=>e.Id == id);
+            List<Department> deptList=context.Departments.ToList();
+            
+            //decalre vm and map
+            EmployeeWithDeptListViewModel empVM = new();
+            empVM.ImageURL = empFromdb.ImageURL;
+            empVM.Id = empFromdb.Id;
+            empVM.Salary = empFromdb.Salary;
+            empVM.EmpName = empFromdb.Name;
+            empVM.DepartmentId = empFromdb.DepartmentId;
+            empVM.Departments = deptList;
+            //send vm view edit form
+            return View("Edit", empVM);
+        }
+        //Employee/SaveEdit/1?Name=&Salary=&ImageURL=&DepartmentId=
+        [HttpPost]
+        public IActionResult SaveEdit(EmployeeWithDeptListViewModel EmpFromReq)//id .empname,salary ,imageurl,departmentID
+        {
+            if (EmpFromReq.EmpName != null)
+            {
+                Employee EmpFromDb = context.Employees.FirstOrDefault(e => e.Id == EmpFromReq.Id);
+                EmpFromDb.Name = EmpFromReq.EmpName;
+                EmpFromDb.ImageURL = EmpFromReq.ImageURL;
+                EmpFromDb.Salary = EmpFromReq.Salary;
+                EmpFromDb.DepartmentId = EmpFromReq.DepartmentId;
+                context.SaveChanges();
+                return RedirectToAction("Index", "Employee");
+            }
+
+            EmpFromReq.Departments = context.Departments.ToList();
+            return View("Edit", EmpFromReq);
+        }
+        #endregion
+
+        #region DEtails
+
         //Employee/Details/1
         //Employee/Details?id=1
         public IActionResult Details(int id)
@@ -72,5 +113,7 @@ namespace WebAppG5.Controllers
 
            
         }
+        #endregion
+
     }
 }
