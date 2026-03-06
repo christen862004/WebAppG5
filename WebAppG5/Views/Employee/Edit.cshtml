@@ -8,8 +8,18 @@
 <form action="/Employee/SaveEdit/@Model.Id" method="post">
    @*  <input type="hidden" name="Id" value="@Model.Id" /> *@
    <div>
-        <label>Employee Name</label>
-        <input type="text" id="EmpName" name="EmpName" value="@Model.EmpName" class="form form-control" />
+       <!--Pure HTML-->
+@* 
+        <label>Employee Name</label>B
+        <input type="text" id="EmpName" name="EmpName" value="@Model.EmpName" class="form form-control" /> *@
+        <!--Pure C# HTML Helpers-->
+       @*  @Html.LabelFor(e=>e.EmpName)
+         @Html.TextBoxFor(e => e.EmpName, new { style = "color:red", @class="form form-control"}) 
+        @Html.EditorFor(e=>e.EmpName) *@
+
+        <!--Tag Helper-->
+        <label asp-for="EmpName"></label>
+        <input asp-for="EmpName" class="form form-control"/>
    </div>
     <div>
         <label>Salary</label>
@@ -44,3 +54,17 @@
 
 <br />
 <a href="/Employee/Index">Back To List</a>
+@Html.ActionLink("Back To List","Index","Employee",null,new{@class="btn btn-success"})
+<a asp-action="Index" asp-controller="Employee">Back To List</a>
+<hr />
+<a href="/Employee/details/@Model.Id?name=@Model.EmpName">d-etails</a>
+@Html.ActionLink("- details -","details","Employee",new{id=Model.Id,name=Model.EmpName})
+<a asp-action="details" asp-controller="Employee" asp-route-id="@Model.Id" asp-route-name="@Model.EmpName">details</a>
+
+
+@* Current : http://localhost:56340/Employee/Edit/1
+browser build re:http://localhost:56340/Employee/Index   "relative Domain"
+
+<a href="Employee/Index">Back To List</a>
+Current : http://localhost:56340/Employee/Edit/1
+browser build re: http://localhost:56340/Employee/Edit/Employee/Index "relative current URL" *@

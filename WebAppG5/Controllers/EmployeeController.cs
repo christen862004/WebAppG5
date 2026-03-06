@@ -19,6 +19,28 @@ namespace WebAppG5.Controllers
             return View("Index",employees);
         }
 
+
+        #region NEw
+        public IActionResult New()
+        {
+            ViewData["DeptList"] = context.Departments.ToList();
+            return View("New");
+        }
+        [HttpPost]
+        public IActionResult SaveNew(Employee EmpFromReq)
+        {
+            if(EmpFromReq.Name!=null && EmpFromReq.Salary > 9000)
+            {
+                //save
+                context.Employees.Add(EmpFromReq);
+                context.SaveChanges();
+                return RedirectToAction("Index", "Employee");
+            }
+            ViewData["DeptList"] = context.Departments.ToList();
+            return View("New", EmpFromReq);
+        }
+        #endregion
+
         #region Edit
         public IActionResult Edit(int id)
         {
@@ -59,9 +81,10 @@ namespace WebAppG5.Controllers
 
         #region DEtails
 
-        //Employee/Details/1
+        //Employee/Details/1?name=ahme
         //Employee/Details?id=1
-        public IActionResult Details(int id)
+        
+        public IActionResult Details(int id,string name)
         {
             Employee Emp= context.Employees.FirstOrDefault(e => e.Id == id);
             if (Emp != null)
