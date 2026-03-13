@@ -15,6 +15,6 @@ namespace WebAppG5.ViewModel
         public string? ImageURL { get; set; }
         public int DepartmentId { get; set; }
         //-------------
-        public List<Department> Departments { get; set; }
+        public List<Department>? Departments { get; set; }
     }
 }

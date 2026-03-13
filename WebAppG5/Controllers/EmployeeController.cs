@@ -19,6 +19,12 @@ namespace WebAppG5.Controllers
             return View("Index",employees);
         }
 
+        public IActionResult CheckSalary(int Salary,string Name)
+        {
+            if (Salary > 8000)
+                return Json(true);
+            return Json(false);
+        }
 
         #region NEw
         public IActionResult New()
@@ -29,12 +35,21 @@ namespace WebAppG5.Controllers
         [HttpPost]
         public IActionResult SaveNew(Employee EmpFromReq)
         {
-            if(EmpFromReq.Name!=null && EmpFromReq.Salary > 9000)
+            //if(EmpFromReq.Name!=null && EmpFromReq.Salary > 9000)
+            if(ModelState.IsValid)//server sie valu
             {
-                //save
-                context.Employees.Add(EmpFromReq);
-                context.SaveChanges();
-                return RedirectToAction("Index", "Employee");
+                try
+                {
+                    //save
+                    context.Employees.Add(EmpFromReq);
+                    context.SaveChanges();
+                    return RedirectToAction("Index", "Employee");
+                }catch(Exception ex)
+                {
+                    //ModelState.AddModelError("DepartmentId", "Please Select department");
+                    ModelState.AddModelError("Exception", ex.InnerException.Message);//div
+
+                }
             }
             ViewData["DeptList"] = context.Departments.ToList();
             return View("New", EmpFromReq);
