@@ -9,7 +9,7 @@ namespace WebAppG5.Models
         {
             Employee? empFromReq = validationContext.ObjectInstance as Employee;
 
-            context = new StepsContext();
+            context =validationContext.GetService<StepsContext>();// new StepsContext();
             string name = value.ToString();
 
             Employee empFromdb= context.Employees

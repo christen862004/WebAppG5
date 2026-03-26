@@ -1,5 +1,66 @@
 ﻿namespace WebAppG5.Models
 {
+    interface ISort
+    {
+        void Sort(int[] arr);
+    }
+    class BubbleSort:ISort
+    {
+        public void Sort(int[] arr)
+        {
+            //sort arr using Bubble Sort Alg
+        }
+    }
+    //extend
+    class SelectSort:ISort
+    {
+        public void Sort(int[] arr) { }
+    }
+    class ChrisSort : ISort
+    {
+        public void Sort(int[] arr) { }
+    }
+
+    //DIP + IOC + OC Principle
+    class MyList //high level class
+    {
+        int[] arr;
+        ISort SortRef; //abstartct class or interface
+        public MyList(ISort sortAlg)//need inject constructor (di)
+        {
+            arr = new int[10];
+            SortRef = sortAlg;//dont create but ask contrsturto paramete
+        }
+        public void SortList()
+        {
+            SortRef.Sort(arr);
+        }
+    }
+
+    class MainTest
+    {
+        public void TEst()
+        {
+            MyList l1 = new MyList(new BubbleSort());//write
+            MyList l2 = new MyList(new SelectSort());
+            MyList l3 = new MyList(new ChrisSort());
+            l1.SortList();//bublle Sort
+            l2.SortList();//bublle Sort
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
     public class Parent<T>
     {
         public T Model { get; set; }

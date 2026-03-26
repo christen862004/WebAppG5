@@ -1,21 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebAppG5.Models;
+using WebAppG5.Repository;
 
 
 namespace WebAppG5.Controllers
 {
     public class EmployeeController : Controller
     {
-        StepsContext context = new StepsContext();
-
-        public EmployeeController()
+        // StepsContext context = new StepsContext();
+        IEmployeeRepository empRepository;
+        IDepartmentRepository deptRepository;
+        public EmployeeController(IEmployeeRepository empRepo, IDepartmentRepository depRepo)//DIP + IOC + DI + OCP + ISP
         {
-            
+            empRepository =empRepo;// new EmployeeRepository();
+            deptRepository =depRepo;// new DepartmentRespository();
         }
 
         public IActionResult Index()
         {
-            List<Employee> employees = context.Employees.ToList();
+            List<Employee> employees = empRepository.GetAll();
             return View("Index",employees);
         }
 
@@ -23,13 +26,13 @@ namespace WebAppG5.Controllers
         {
             if (Salary > 8000)
                 return Json(true);
-            return Json(false);
+            return Json("sdsdsd");
         }
 
         #region NEw
         public IActionResult New()
         {
-            ViewData["DeptList"] = context.Departments.ToList();
+            ViewData["DeptList"] =deptRepository.GetAll();
             return View("New");
         }
         [HttpPost]
@@ -41,8 +44,8 @@ namespace WebAppG5.Controllers
                 try
                 {
                     //save
-                    context.Employees.Add(EmpFromReq);
-                    context.SaveChanges();
+                    empRepository.Add(EmpFromReq);
+                    empRepository.Save();
                     return RedirectToAction("Index", "Employee");
                 }catch(Exception ex)
                 {
@@ -51,7 +54,7 @@ namespace WebAppG5.Controllers
 
                 }
             }
-            ViewData["DeptList"] = context.Departments.ToList();
+            ViewData["DeptList"] = deptRepository.GetAll();
             return View("New", EmpFromReq);
         }
         #endregion
@@ -60,8 +63,8 @@ namespace WebAppG5.Controllers
         public IActionResult Edit(int id)
         {
            //collect
-            Employee empFromdb=context.Employees.FirstOrDefault(e=>e.Id == id);
-            List<Department> deptList=context.Departments.ToList();
+            Employee empFromdb=empRepository.GetById(id);
+            List<Department> deptList=deptRepository.GetAll();
             
             //decalre vm and map
             EmployeeWithDeptListViewModel empVM = new();
@@ -80,16 +83,18 @@ namespace WebAppG5.Controllers
         {
             if (EmpFromReq.EmpName != null)
             {
-                Employee EmpFromDb = context.Employees.FirstOrDefault(e => e.Id == EmpFromReq.Id);
+                Employee EmpFromDb = new Employee();
+                EmpFromDb.Id = EmpFromReq.Id;
                 EmpFromDb.Name = EmpFromReq.EmpName;
                 EmpFromDb.ImageURL = EmpFromReq.ImageURL;
                 EmpFromDb.Salary = EmpFromReq.Salary;
                 EmpFromDb.DepartmentId = EmpFromReq.DepartmentId;
-                context.SaveChanges();
+                empRepository.Update(EmpFromDb);
+                empRepository.Save();
                 return RedirectToAction("Index", "Employee");
             }
 
-            EmpFromReq.Departments = context.Departments.ToList();
+            EmpFromReq.Departments = deptRepository.GetAll();
             return View("Edit", EmpFromReq);
         }
         #endregion
@@ -101,7 +106,7 @@ namespace WebAppG5.Controllers
         
         public IActionResult Details(int id,string name)
         {
-            Employee Emp= context.Employees.FirstOrDefault(e => e.Id == id);
+            Employee Emp=empRepository.GetById(id);
             if (Emp != null)
             {
                 string msg = "welcome";
@@ -125,7 +130,8 @@ namespace WebAppG5.Controllers
         public IActionResult DetailsVM(int id)
         {
             //Collect data
-            Employee Emp = context.Employees.FirstOrDefault(e => e.Id == id);
+            Employee Emp=empRepository.GetById(id);
+
             if (Emp != null)
             {
                 string msg = "welcome";

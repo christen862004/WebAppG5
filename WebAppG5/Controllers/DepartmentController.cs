@@ -1,14 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebAppG5.Models;
+using WebAppG5.Repository;
 
 namespace WebAppG5.Controllers
 {
     public class DepartmentController : Controller
     {
-        StepsContext context=new StepsContext();
+        IDepartmentRepository deptRepository;
+        public DepartmentController(IDepartmentRepository ddeptrepo)
+        {
+            deptRepository =ddeptrepo;// new DepartmentRespository();
+        }
+        //StepsContext context=new StepsContext();
         public IActionResult Index()
         {
-            List<Department> deptList = context.Departments.ToList();
+            List<Department> deptList = deptRepository.GetAll();
             return View("Index",deptList);
         }
 
@@ -30,8 +36,8 @@ namespace WebAppG5.Controllers
             //dept.ManagerName= ManagerName;
             if (dept.Name != null)
             {
-                context.Departments.Add(dept);
-                context.SaveChanges();//<---
+                deptRepository.Add(dept);
+                deptRepository.Save();
                 return RedirectToAction("Index", "Department");
             }
             return View("New", dept);
